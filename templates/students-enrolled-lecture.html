@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midterm Grade Calculation for Lecture Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student-management.css') }}">
+    <style>
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .grade-input {
+            width: 80%;
+            padding: 5px;
+            text-align: center;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .final-term-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .final-term-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Midterm Grade Calculation for Lecture Courses</h1>
+        <form>
+            <input type="hidden" name="courseCode" value="{{ course.course_code }}">
+            <input type="hidden" name="blockName" value="{{ block_name }}">
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">S I.D</th>
+                            <th rowspan="2">S Name</th>
+                            <th colspan="2">Quiz 1</th>
+                            <th colspan="2">Quiz 2</th>
+                            <th colspan="2">Quiz 3</th>
+                            <th colspan="2">Seatwork 1</th>
+                            <th colspan="2">Seatwork 2</th>
+                            <th colspan="2">Seatwork 3</th>
+                            <th rowspan="2">Attendance</th>
+                            <th rowspan="2">Present Days</th>
+                            <th rowspan="2">Compilation</th>
+                            <th rowspan="2">Compilation HPS</th>
+                            <th rowspan="2">Midterm Exam</th>
+                            <th rowspan="2">Midterm Exam HPS</th> <!-- Added Midterm Exam HPS -->
+                            <th rowspan="2">Midterm Grade</th>
+                        </tr>
+                        <tr>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr data-student-id="{{ student.student_id }}">
+                            <td>{{ student.student_id }}</td>
+                            <td>{{ student.student_name }}</td>
+                            {% for i in range(3) %}
+                            <td><input type="number" name="quiz_{{ student.id }}_{{ i + 1 }}" class="grade-input quiz-score" required></td>
+                            <td><input type="number" name="quiz_hps_{{ student.id }}_{{ i + 1 }}" class="grade-input quiz-hps" required></td>
+                            {% endfor %}
+                            {% for j in range(3) %}
+                            <td><input type="number" name="seatwork_{{ student.id }}_{{ j + 1 }}" class="grade-input seatwork-score" required></td>
+                            <td><input type="number" name="seatwork_hps_{{ student.id }}_{{ j + 1 }}" class="grade-input seatwork-hps" required></td>
+                            {% endfor %}
+                            <td><input type="number" name="attendance_{{ student.id }}" class="grade-input attendance" required></td>
+                            <td><input type="number" name="present_days_{{ student.id }}" class="grade-input present-days" required></td>
+                            <td><input type="number" name="compilation_{{ student.id }}" class="grade-input compilation" required></td>
+                            <td><input type="number" name="compilation_hps_{{ student.id }}" class="grade-input compilation-hps" required></td>
+                            <td><input type="number" name="midterm_exam_{{ student.id }}" class="grade-input midterm-exam" required></td>
+                            <td><input type="number" name="midterm_exam_hps_{{ student.id }}" class="grade-input midterm-exam-hps" required></td> <!-- Midterm Exam HPS -->
+                            <td><input type="number" name="midterm_grade_{{ student.id }}" class="grade-input midterm-grade" readonly></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        
+        <!-- Added the Proceed to Final Term button -->
+        <a href="{{ url_for('final_term', course_code=course.course_code, block_name=block_name) }}" class="final-term-btn">Proceed to Final Term</a>
+    </div>
+
+    <script>
+        // Listen for any input event
+        document.addEventListener('input', function () {
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                // Get values for quizzes, seatworks, attendance, present days, compilation, and midterm exam
+                const quizScores = Array.from(row.querySelectorAll('.quiz-score')).map(input => parseFloat(input.value) || 0);
+                const quizHPS = Array.from(row.querySelectorAll('.quiz-hps')).map(input => parseFloat(input.value) || 1);
+                const seatworkScores = Array.from(row.querySelectorAll('.seatwork-score')).map(input => parseFloat(input.value) || 0);
+                const seatworkHPS = Array.from(row.querySelectorAll('.seatwork-hps')).map(input => parseFloat(input.value) || 1);
+                const attendance = parseFloat(row.querySelector('.attendance').value) || 0;
+                const presentDays = parseFloat(row.querySelector('.present-days').value) || 1; // Default HPS for present days is 1
+                const compilation = parseFloat(row.querySelector('.compilation').value) || 0;
+                const compilationHPS = parseFloat(row.querySelector('.compilation-hps').value) || 1;
+                const midtermExam = parseFloat(row.querySelector('.midterm-exam').value) || 0;
+                const midtermExamHPS = parseFloat(row.querySelector('.midterm-exam-hps').value) || 1;
+
+                // Calculate weighted scores for each component
+                const quizTotal = quizScores.reduce((sum, score, index) => sum + (score / quizHPS[index]), 0) * (30 / quizScores.length);
+                const seatworkTotal = seatworkScores.reduce((sum, score, index) => sum + (score / seatworkHPS[index]), 0) * (15 / seatworkScores.length);
+                const attendanceWeighted = (attendance / presentDays) * 10; // Attendance calculated with Present Days as HPS
+                const compilationWeighted = (compilation / compilationHPS) * 5;
+                const midtermExamWeighted = (midtermExam / midtermExamHPS) * 40;
+
+                // Calculate total midterm grade
+                let midtermGrade = quizTotal + seatworkTotal + attendanceWeighted + compilationWeighted + midtermExamWeighted;
+
+                // Check if any score exceeds HPS and reset grade if it does
+                if (quizScores.some((score, index) => score > quizHPS[index]) ||
+                    seatworkScores.some((score, index) => score > seatworkHPS[index]) ||
+                    attendance > presentDays ||
+                    compilation > compilationHPS ||
+                    midtermExam > midtermExamHPS) {
+                    midtermGrade = 0.0;
+                }
+
+                // Update the midterm grade cell
+                row.querySelector('.midterm-grade').value = midtermGrade.toFixed(2);
+            });
+        });
+    </script>
+</body>
+</html>

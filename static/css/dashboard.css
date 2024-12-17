@@ -1,0 +1,182 @@
+/* General Styles for Dashboard */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: url('https://main.psu.edu.ph/wp-content/uploads/2022/06/psuschool.jpg') no-repeat center center fixed; /* Background image */
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; /* Full screen height */
+    flex-direction: column; /* Center everything vertically */
+}
+
+/* Box Container for all the Boxes */
+.box-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow boxes to wrap on smaller screens */
+    justify-content: center; /* Center all boxes */
+    align-items: center; /* Ensure the boxes are aligned */
+    gap: 20px; /* Add gap between the boxes */
+    width: 80%; /* Adjust width as needed */
+    max-width: 1000px; /* Limit max width */
+}
+
+/* Row 1: First Two Boxes (Courses, Compute Grade) */
+.row-1 {
+    display: flex;
+    justify-content: center; /* Center both boxes */
+    width: 100%;
+    gap: 20px;
+}
+
+/* Row 2: Student Management Box */
+.row-2 {
+    display: flex;
+    justify-content: center; /* Center this box */
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Each Box Styling */
+.box {
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background for boxes */
+    color: #343a40;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 30%; /* Width of each box */
+    text-align: center;
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hover effect for boxes */
+.box:hover {
+    transform: translateY(-5px);
+}
+
+/* Box Logo Styling */
+.box-logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+/* Button Styling */
+.box-btn {
+    background-color: #1006cd;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.box-btn:hover {
+    background-color: #0d0dc6;
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .box-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .box {
+        width: 80%; /* Make boxes take more width on smaller screens */
+        margin-bottom: 20px;
+    }
+
+    .row-1 {
+        flex-direction: column;
+    }
+
+    .row-2 {
+        margin-top: 20px;
+    }
+}
+
+/* General Styles for Box Container (For Add/View Course Pages) */
+.box-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.box {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.box-logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.box-btn {
+    background-color: #1342ea;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem;
+    margin-top: 15px;
+}
+
+.box-btn:hover {
+    background-color: #0b34d8;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/* Styling for the Course List */
+.courses-list {
+    margin-top: 20px;
+}
+
+.course-item {
+    background-color: #f4f4f4;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}

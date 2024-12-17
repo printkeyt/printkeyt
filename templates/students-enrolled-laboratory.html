@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midterm Grade Calculation for Laboratory Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student-management.css') }}">
+    <style>
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .grade-input {
+            width: 80%;
+            padding: 5px;
+            text-align: center;
+        }
+        .submit-btn, .final-term-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .submit-btn:hover, .final-term-btn:hover {
+            background-color: #45a049;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Midterm Grade Calculation for Laboratory Courses</h1>
+        <form id="gradeForm">
+            <input type="hidden" name="courseCode" value="{{ course.course_code }}">
+            <input type="hidden" name="blockName" value="{{ block_name }}">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">S I.D</th>
+                            <th rowspan="2">S Name</th>
+                            <th colspan="2">Quiz 1</th>
+                            <th colspan="2">Quiz 2</th>
+                            <th colspan="2">Quiz 3</th>
+                            <th colspan="2">Lab Report 1</th>
+                            <th colspan="2">Lab Report 2</th>
+                            <th colspan="2">Lab Report 3</th>
+                            <th rowspan="2">Midterm Exam</th>
+                            <th rowspan="2">MTE HPS</th>
+                            <th rowspan="2">Midterm Grade</th>
+                        </tr>
+                        <tr>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr data-student-id="{{ student.student_id }}">
+                            <td>{{ student.student_id }}</td>
+                            <td>{{ student.student_name }}</td>
+                            {% for i in range(3) %}
+                            <td><input type="number" name="quiz_{{ student.id }}_{{ i + 1 }}" class="grade-input quiz-score" required></td>
+                            <td><input type="number" name="quiz_hps_{{ i + 1 }}" class="grade-input quiz-hps" required></td>
+                            {% endfor %}
+                            {% for j in range(3) %}
+                            <td><input type="number" name="lab_report_{{ student.id }}_{{ j + 1 }}" class="grade-input lab-report-score" required></td>
+                            <td><input type="number" name="lab_report_hps_{{ j + 1 }}" class="grade-input lab-report-hps" required></td>
+                            {% endfor %}
+                            <td><input type="number" name="midterm_exam_{{ student.id }}" class="grade-input midterm-exam" required></td>
+                            <td><input type="number" name="mte_hps" class="grade-input mte-hps" required></td>
+                            <td><input type="number" name="midterm_grade_{{ student.id }}" class="grade-input midterm-grade" readonly></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <a href="{{ url_for('final_term', course_code=course.course_code, block_name=block_name) }}" class="final-term-btn">Proceed to Final Term</a>
+    </div>
+    <script>
+        document.addEventListener('input', function () {
+    const rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        const quizScores = Array.from(row.querySelectorAll('.quiz-score')).map(input => parseFloat(input.value) || 0);
+        const quizHPS = Array.from(row.querySelectorAll('.quiz-hps')).map(input => parseFloat(input.value) || 1);
+        const labReportScores = Array.from(row.querySelectorAll('.lab-report-score')).map(input => parseFloat(input.value) || 0);
+        const labReportHPS = Array.from(row.querySelectorAll('.lab-report-hps')).map(input => parseFloat(input.value) || 1);
+
+        const midtermExam = parseFloat(row.querySelector('.midterm-exam').value) || 0;
+        const mteHPS = parseFloat(row.querySelector('.mte-hps').value) || 1;
+
+        // Validate that the score is not higher than the HPS
+        let invalidInput = false;
+        const allScores = [...quizScores, ...labReportScores, midtermExam];
+        const allHPS = [...quizHPS, ...labReportHPS, mteHPS];
+
+        allScores.forEach((score, index) => {
+            if (score > allHPS[index]) {
+                invalidInput = true;
+            }
+        });
+
+        if (invalidInput) {
+            row.querySelector('.midterm-grade').value = "0.0";
+            row.querySelector('.midterm-grade').style.color = "red"; // Optional: Add red text for emphasis
+            return;
+        }
+
+        // Calculate weighted scores for Quiz and Lab Reports
+        const quizTotal = quizScores.reduce((sum, score, index) => sum + (score / quizHPS[index]), 0) * 100 / quizScores.length;
+        const labReportTotal = labReportScores.reduce((sum, score, index) => sum + (score / labReportHPS[index]), 0) * 100 / labReportScores.length;
+
+        // Calculate the final grade based on your rubric
+        const quizWeighted = quizTotal * 0.30;
+        const labReportWeighted = labReportTotal * 0.30;
+        const midtermExamWeighted = (midtermExam / mteHPS) * 40; // 40% weight for the midterm exam
+
+        // Calculate the total midterm grade
+        let midtermGrade = quizWeighted + labReportWeighted + midtermExamWeighted;
+
+        // Ensure the midterm grade doesn't exceed 100
+        if (midtermGrade > 100) {
+            midtermGrade = 100;
+        }
+
+        // Display the calculated midterm grade
+        row.querySelector('.midterm-grade').value = midtermGrade.toFixed(2);
+
+            });
+        });
+    </script>
+</body>
+</html>

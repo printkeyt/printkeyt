@@ -1,0 +1,109 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    /* Background image */
+    background: url('https://main.psu.edu.ph/wp-content/uploads/2022/06/psuschool.jpg') no-repeat center center fixed; /* External image URL */
+    background-size: cover; /* Ensures the image covers the entire viewport */
+    background-position: center; /* Keeps the image centered */
+    background-attachment: fixed; /* Fixes the background image while scrolling */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.8); 
+    color: #343a40;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 350px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+/* Header */
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #1609cc; 
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.input-group i {
+    font-size: 1.2rem;
+    color: #2413c5; 
+    margin-right: 10px;
+}
+
+.input-group input {
+    border: none;
+    background: none;
+    flex: 1;
+    font-size: 1rem;
+    padding: 8px;
+    outline: none;
+    color: #333;
+}
+
+/* Button */
+.btn {
+    background: #59d225; 
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background: #0d0dc6; 
+}
+
+/* Options */
+.options {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.options a {
+    color: #2137cc; 
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.options a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #888;
+}

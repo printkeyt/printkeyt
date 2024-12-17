@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Tentative Grade Calculation for Laboratory Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student-management.css') }}">
+    <style>
+        /* General container styling */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Input field styling */
+        .grade-input {
+            width: 80%;
+            padding: 5px;
+            text-align: center;
+        }
+
+        /* Submit button styling */
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Back link styling */
+        .block-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        /* Wrap the table for better responsiveness */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title of the page -->
+        <h1 style="text-align: center;">Final Tentative Grade Calculation for Laboratory Courses</h1>
+
+        <!-- Form for submitting the grades -->
+        <form action="{{ url_for('compute_final_grade') }}" method="POST">
+            <input type="hidden" name="courseCode" value="{{ course.course_code }}">
+            <input type="hidden" name="blockName" value="{{ block_name }}">
+
+            <!-- Wrapper for table to allow scrolling on smaller screens -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <!-- Main header row with columns -->
+                        <tr>
+                            <th rowspan="2">S I.D</th>
+                            <th rowspan="2">S Name</th>
+                            <th colspan="2">Quiz 1</th>
+                            <th colspan="2">Quiz 2</th>
+                            <th colspan="2">Quiz 3</th>
+                            <th colspan="2">Laboratory Report</th>
+                            <th colspan="2">Final Term Exam (FTE)</th>
+                            <th rowspan="2">Final Tentative Grade</th>
+                        </tr>
+                        <!-- Subheader row for quiz, lab, and exam components -->
+                        <tr>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Score</th>
+                            <th>HPS</th>
+                            <th>Report Score</th>
+                            <th>Report HPS</th>
+                            <th>Exam Score</th>
+                            <th>FTE HPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through the students -->
+                        {% for student in students %}
+                        <tr>
+                            <!-- Display student ID and name -->
+                            <td>{{ student.student_id }}</td>
+                            <td>{{ student.student_name }}</td>
+
+                            <!-- Loop for quizzes (3 quizzes) -->
+                            {% for i in range(3) %}
+                            <td><input type="number" name="quiz_{{ student.id }}_{{ i + 1 }}" class="grade-input quiz-score" required></td>
+                            <td><input type="number" name="quiz_hps_{{ i + 1 }}" class="grade-input quiz-hps" required></td>
+                            {% endfor %}
+
+                            <!-- Laboratory Report -->
+                            <td><input type="number" name="lab_report_{{ student.id }}" class="grade-input lab-report-score" required></td>
+                            <td><input type="number" name="lab_report_hps" class="grade-input lab-report-hps" required></td>
+
+                            <!-- Final Term Exam (FTE) -->
+                            <td><input type="number" name="final_exam_{{ student.id }}" class="grade-input midterm-exam" required></td>
+                            <td><input type="number" name="fte_hps" class="grade-input mte-hps" required></td>
+
+                            <!-- Final Tentative Grade (readonly input) -->
+                            <td><input type="number" name="final_tentative_grade_{{ student.id }}" class="grade-input midterm-grade" readonly></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('input', function () {
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const quizScores = Array.from(row.querySelectorAll('.quiz-score')).map(input => parseFloat(input.value) || 0);
+                const quizHPS = Array.from(row.querySelectorAll('.quiz-hps')).map(input => parseFloat(input.value) || 1);
+                const labReportScores = Array.from(row.querySelectorAll('.lab-report-score')).map(input => parseFloat(input.value) || 0);
+                const labReportHPS = Array.from(row.querySelectorAll('.lab-report-hps')).map(input => parseFloat(input.value) || 1);
+
+                const midtermExam = parseFloat(row.querySelector('.midterm-exam').value) || 0;
+                const mteHPS = parseFloat(row.querySelector('.mte-hps').value) || 1;
+
+                // Validate that the score is not higher than the HPS
+                let invalidInput = false;
+                const allScores = [...quizScores, ...labReportScores, midtermExam];
+                const allHPS = [...quizHPS, ...labReportHPS, mteHPS];
+
+                allScores.forEach((score, index) => {
+                    if (score > allHPS[index]) {
+                        invalidInput = true;
+                    }
+                });
+
+                if (invalidInput) {
+                    row.querySelector('.midterm-grade').value = "0.0";
+                    row.querySelector('.midterm-grade').style.color = "red"; // Optional: Add red text for emphasis
+                    return;
+                }
+
+                // Calculate weighted scores for Quiz and Lab Reports
+                const quizTotal = quizScores.reduce((sum, score, index) => sum + (score / quizHPS[index]), 0) * 100 / quizScores.length;
+                const labReportTotal = labReportScores.reduce((sum, score, index) => sum + (score / labReportHPS[index]), 0) * 100 / labReportScores.length;
+
+                // Calculate the final grade based on your rubric
+                const quizWeighted = quizTotal * 0.30;
+                const labReportWeighted = labReportTotal * 0.30;
+                const midtermExamWeighted = (midtermExam / mteHPS) * 40; // 40% weight for the midterm exam
+
+                // Calculate the total midterm grade
+                let midtermGrade = quizWeighted + labReportWeighted + midtermExamWeighted;
+
+                // Ensure the midterm grade doesn't exceed 100
+                if (midtermGrade > 100) {
+                    midtermGrade = 100;
+                }
+
+                // Display the calculated midterm grade
+                row.querySelector('.midterm-grade').value = midtermGrade.toFixed(2);
+            });
+        });
+    </script>
+</body>
+</html>

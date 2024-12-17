@@ -1,0 +1,240 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    background-image: url('https://main.psu.edu.ph/wp-content/uploads/2022/06/psuschool.jpg');  /* Your background image */
+    background-size: cover; /* Make the image cover the entire background */
+    background-position: center; /* Center the background image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #333;
+}
+
+.student-management-container, .form-container, .block-details-container, .block-container, .grade-calculation-container {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.course-container, .btn-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Make the layout responsive */
+}
+
+.box, .course-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin: 10px; /* Add some margin for spacing */
+    max-width: 300px;
+}
+
+.box:hover, .course-box:hover {
+    transform: translateY(-5px);
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.box-btn, .block-link {
+    background-color: #0c32bc;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+    margin-top: 10px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.box-btn:hover, .block-link:hover {
+    background-color: #0d07b0;
+}
+
+.course-link {
+    text-decoration: none;
+    color: #333;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+}
+
+.course-link h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #0c32bc;
+}
+
+.course-link p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.block-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.block-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.delete-form {
+    margin-left: 10px;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"], button {
+    background-color: #0c32bc;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #0d07b0;
+}
+
+input[type="submit"]:focus, button:focus {
+    outline: 3px solid #0d07b0;
+}
+
+.form-container .btn {
+    margin-top: 20px;
+}
+
+table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.action-btn {
+    background-color: #0c32bc;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-left: 5px;
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    background-color: #0d07b0;
+}
+
+.block-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.block-list ul li {
+    background-color: #f4f4f4;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.block-list ul li:hover {
+    background-color: #e0e0e0;
+}
+
+.grade-input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.grade-input:focus {
+    outline: none;
+    border-color: #0c32bc;
+    box-shadow: 0 0 5px rgba(12, 50, 188, 0.5);
+}
